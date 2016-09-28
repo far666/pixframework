@@ -125,7 +125,7 @@ class Pix_Cache_Adapter_Memcache extends Pix_Cache_Adapter
         return $memcache->get($key);
     }
 
-    public function gets(array $keys)
+    public function gets($keys)
     {
         $memcache = $this->getMemcache();
         return $memcache->get($keys);
