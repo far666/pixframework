@@ -47,7 +47,7 @@ class Pix_Loader
             $path = rtrim($path, '/');
             $file_path = $path . '/' . $fileName;
             if (file_exists($file_path)) {
-                require $file_path;
+                require_once $file_path;
             }
         }
     }
