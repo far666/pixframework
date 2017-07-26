@@ -643,7 +643,7 @@ abstract class Pix_Table
      */
     public function isNumbericColumn($column)
     {
-	if (is_scalar($column) and isset($this->_columns[$column]['type']) and in_array($this->_columns[$column]['type'], array('int', 'tinyint'))) {
+	if (is_scalar($column) and isset($this->_columns[$column]['type']) and in_array($this->_columns[$column]['type'], array('int', 'tinyint', 'bigint'))) {
 	    return true;
 	}
 	return false;
