@@ -4,7 +4,20 @@ namespace Pix\Table\Helper;
 
 trait ElasticsearchMapping
 {
-    public function getMapping()
+    public function extendElasticsearchMapping()
+    {
+        return array();
+    }
+
+    public function getElasticsearchMapping()
+    {
+        $default_mapping = $this->getDefaultMapping();
+        $extend_mapping = $this->extendElasticsearchMapping();
+        $mapping = array_merge($default_mapping, $extend_mapping);
+        return $mapping;
+    }
+
+    protected function getDefaultMapping()
     {
         $output_columns = array();
         foreach ($this->_columns as $name => $data) {
