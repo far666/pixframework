@@ -25,6 +25,11 @@ class Pix_Cache
 	$ret = call_user_func_array(array(self::$_servers[$this->_id], $func), $args);
 	return $ret;
     }
+
+    public function getServer()
+    {
+        return self::$_servers[$this->_id];
+    }
     
 
     protected static $_servers = array();
