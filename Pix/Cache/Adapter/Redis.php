@@ -119,6 +119,6 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
     public function __call($name, $arguments)
     {
         $redis = $this->getRedis();
-        call_user_func_array(array($redis, $name), $arguments);
+        return call_user_func_array(array($redis, $name), $arguments);
     }
 }
