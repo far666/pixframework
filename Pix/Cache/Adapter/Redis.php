@@ -69,51 +69,79 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
     {
         $redis = $this->getRedis();
         $options = $this->_getOptions($options);
-        return $redis->setNx($key, $value, $options);
+        $redis->setNx($key, $value, $options);
+        return $this;
     }
 
     public function set($key, $value, $options = array())
     {
         $redis = $this->getRedis();
         $options = $this->_getOptions($options);
-        return $redis->set($key, $value, $options);
+        $redis->set($key, $value, $options);
+        return $this;
     }
 
     public function delete($key)
     {
         $redis = $this->getRedis();
-        return $redis->delete($key);
+        $redis->delete($key);
+        return $this;
     }
 
     public function replace($key, $value, $options = array())
     {
         $redis = $this->getRedis();
         $options = $this->_getOptions($options);
-        return $redis->setEx($key, $value, $options);
+        $redis->setEx($key, $value, $options);
+        return $this;
     }
 
     public function inc($key, $inc = 1)
     {
         $redis = $this->getRedis();
-        return $redis->incrBy($key, $inc);
+        $redis->incrBy($key, $inc);
+        return $this;
     }
 
     public function dec($key, $inc = 1)
     {
         $redis = $this->getRedis();
-        return $redis->decrBy($key, $inc);
+        $redis->decrBy($key, $inc);
+        return $this;
     }
 
     public function append($key, $data)
     {
         $redis = $this->getRedis();
-        return $redis->append($key, $data);
+        $redis->append($key, $data);
+        return $this;
     }
 
     public function get($key)
     {
         $redis = $this->getRedis();
         return $redis->get($key);
+    }
+
+    public function watch($key)
+    {
+        $redis = $this->getRedis();
+        $redis->watch($key);
+        return $this;
+    }
+
+    public function multi()
+    {
+        $redis = $this->getRedis();
+        $redis->multi();
+        return $this;
+    }
+
+    public function exec()
+    {
+        $redis = $this->getRedis();
+        $redis->exec();
+        return $redis->exec();
     }
 
     public function __call($name, $arguments)
