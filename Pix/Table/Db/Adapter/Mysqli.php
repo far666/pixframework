@@ -19,7 +19,7 @@ class Pix_Table_Db_Adapter_Mysqli extends Pix_Table_Db_Adapter_MysqlCommon
   self::$_for_update_enable = false;
     }
 
-    public static function startForUpdate()
+    public function startForUpdate()
     {
       self::$_for_update_enable = true;
     }
