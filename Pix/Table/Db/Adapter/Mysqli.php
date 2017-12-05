@@ -56,6 +56,12 @@ class Pix_Table_Db_Adapter_Mysqli extends Pix_Table_Db_Adapter_MysqlCommon
      */
     public function query($sql, $table = null)
     {
+      global $lock_debug;
+      if ($lock_debug)
+      {
+        global $lock_debug_sql;
+        $lock_debug_sql .= $sql . "\n";
+      }
         $short_sql = mb_strimwidth($sql, 0, 512, "...len=" . strlen($sql));
 	if (Pix_Table::$_log_groups[Pix_Table::LOG_QUERY]) {
 	    Pix_Table::debug(sprintf("[%s]\t%40s", $this->_link->host_info, $short_sql));
