@@ -92,6 +92,10 @@ class Pix_Table_Db_Adapter_Mysqli extends Pix_Table_Db_Adapter_MysqlCommon
 	}
 
 	$starttime = microtime(true);
+  if (!$this->_link->ping()) {
+      $this->_link->connect(DB_HOST, DB_USERNAME, DB_PASSWORD, DB_DATABASE);
+      $this->_link->set_charset('utf8');
+  }
 	$res = $this->_link->query($sql);
 	if (($t = Pix_Table::getLongQueryTime()) and ($delta = (microtime(true) - $starttime)) > $t) {
 	    Pix_Table::debug(sprintf("[%s]\t%s\t%40s", $this->_link->host_info, $delta, $sql));
