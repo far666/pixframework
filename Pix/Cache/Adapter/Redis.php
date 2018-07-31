@@ -39,10 +39,18 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
         if (is_null($this->_redis)) {
             $retry_times = 0;
             while($retry_times <= $this->_max_retry_times) {
-                if ($this->_redis = $this->_getRedisClient()) {
+                if ($redis_client = $this->_getRedisClient()) {
                     break;
                 }
+                $retry_times ++;
             }
+
+            if (!$redis_client) {
+                $log = sprintf("redis connect fail in %d times!", $this->_max_retry_times);
+                throw new Pix_Exception($log);
+            }
+
+            $this->_redis = $redis_client;
         }
 
         return $this->_redis;
@@ -64,11 +72,13 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
             $server['retry_interval'] ?: null
         );
 
-        if ($redis->ping()) {
-            return $redis;
+        try {
+            $redis->ping();
+        } catch (RedisException $e) {
+            return null;
         }
 
-        return null;
+        return $redis;
     }
 
     protected function _getOptions($options)
