@@ -14,6 +14,7 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
     protected $_redis = null;
     protected $_server = null;
     protected $_default_expire = 3600;
+    protected $_max_retry_times = 3;
 
     public function __construct($config)
     {
@@ -27,26 +28,47 @@ class Pix_Cache_Adapter_Redis extends Pix_Cache_Adapter
                 $this->_default_expire = $config['options']['ex'];
             }
         }
+
+        if (isset($config['max_retry_times'])) {
+            $this->_max_retry_times = $config['max_retry_times'];
+        }
     }
 
     public function getRedis()
     {
         if (is_null($this->_redis)) {
-            $server = $this->_server;
-            if (!is_array($server)) {
-                throw new Pix_Exception('config error');
+            $retry_times = 0;
+            while($retry_times <= $this->_max_retry_times) {
+                if ($this->_redis = $this->_getRedisClient()) {
+                    break;
+                }
             }
-
-            $this->_redis = new Redis;
-            $this->_redis->connect(
-                $server['host'],
-                $server['port'],
-                $server['timeout'] ?: 1,
-                $server['reserved'] ?: null,
-                $server['retry_interval'] ?: null
-            );
         }
+
         return $this->_redis;
+    }
+
+    protected function _getRedisClient()
+    {
+        $server = $this->_server;
+        if (!is_array($server)) {
+            throw new Pix_Exception('config error');
+        }
+
+        $redis = new Redis;
+        $redis->connect(
+            $server['host'],
+            $server['port'],
+            $server['timeout'] ?: 1,
+            $server['reserved'] ?: null,
+            $server['retry_interval'] ?: null
+        );
+
+        if ($redis->ping()) {
+            return $redis;
+        }
+
+        return null;
     }
 
     protected function _getOptions($options)
